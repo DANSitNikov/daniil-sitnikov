@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "docker:build": "docker build -t ${DOCKER_IMAGE:-website-v1}:latest -t ${DOCKER_IMAGE:-website-v1}:1.0.0 .",
+    "docker:run": "docker run --rm -p 3000:3000 ${DOCKER_IMAGE:-website-v1}:latest"
   },
   "dependencies": {
     "react": "^19.2.6",
