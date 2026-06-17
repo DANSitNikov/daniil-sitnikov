@@ -4,24 +4,24 @@ on:
   push:
     branches: [main]
 
-  jobs:
-    build:
-      runs-on: ubuntu-latest
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-      steps:
-        - uses: actions/checkout@v3
+    steps:
+      - uses: actions/checkout@v3
 
-        - name: Install dependencies
-          run: npm CI
+      - name: Install dependencies
+        run: npm CI
 
-        - name: link
-          run: npm run lint
+      - name: link
+        run: npm run lint
 
-        - name: Login to Docker Hub
-          run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
-  
-        - name: Build Docker image
-          run: docker build -t ${{ secrets.DOCKER_USER }}/my-website:${{ github.sha }} .
-  
-        - name: Push Docker image
-          run: docker push ${{ secrets.DOCKER_USER }}/my-website:${{ github.sha }}
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_USER }}/my-website:${{ github.sha }} .
+
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKER_USER }}/my-website:${{ github.sha }}
