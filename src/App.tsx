@@ -63,6 +63,7 @@ const experience = [
 ];
 
 function App() {
+  console.log("check deploy");
   return (
     <main className="cv-page">
       <header className="hero">
@@ -150,7 +151,6 @@ function App() {
           (upper-intermediate)
         </p>
       </section>
-      {/* test */}
     </main>
   );
 }
