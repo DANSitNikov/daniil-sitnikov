@@ -39,4 +39,4 @@ jobs:
             cd /var/www/myapp/frontend
             git pull origin main
             cd /var/www/myapp
-            docker compose up --build
+            docker compose up --build -d
