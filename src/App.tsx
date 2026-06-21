@@ -66,6 +66,7 @@ function App() {
   console.log("check deploy");
   return (
     <main className="cv-page">
+      hello
       <header className="hero">
         <h1>Daniil Sitnikov</h1>
         <p className="hero__role">Frontend Engineer</p>
@@ -87,7 +88,6 @@ function App() {
           </a>
         </p>
       </header>
-
       <section className="cv-section">
         <p className="lead">
           <strong>Summary:</strong> Frontend Engineer with 5 years of
@@ -99,7 +99,6 @@ function App() {
           interfaces.
         </p>
       </section>
-
       <section className="cv-section">
         <p className="lead">
           <strong>Key skills:</strong>{" "}
@@ -111,7 +110,6 @@ function App() {
           ))}
         </p>
       </section>
-
       <section className="cv-section">
         <div className="section-heading">
           <h2>Professional Experience</h2>
@@ -141,7 +139,6 @@ function App() {
           ))}
         </div>
       </section>
-
       <section className="cv-section">
         <div className="section-heading">
           <h2>Additional Information</h2>
