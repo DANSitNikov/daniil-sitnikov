@@ -11,6 +11,8 @@ jobs:
   build:
     needs: checks
     runs-on: ubuntu-latest
+    outputs:
+      image_sha: ${{ steps.build-push.outputs.image_sha }}  # передаём в deploy
 
     steps:
       - uses: actions/checkout@v3
