@@ -9,7 +9,7 @@ jobs:
   #   uses: ./.github/workflows/pr-test.yml
 
   build:
-    needs: checks
+    # needs: checks
     runs-on: ubuntu-latest
 
     steps:
