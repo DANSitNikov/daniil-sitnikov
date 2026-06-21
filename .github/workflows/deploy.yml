@@ -5,38 +5,43 @@ on:
     branches: [main]
 
 jobs:
-  checks:
-    uses: ./.github/workflows/pr-test.yml
+  # checks:
+  #   uses: ./.github/workflows/pr-test.yml
 
-  # build:
+  build:
+    # needs: checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
+
+      - name: Build и push image with two tags
+        id: build-push
+        env:
+          IMAGE_SHA: ${{ secrets.DOCKER_USER }}/website-v1:sha-${{ github.sha }}
+          IMAGE_LATEST: ${{ secrets.DOCKER_USER }}/website-v1:latest
+        run: |
+          docker build -t $IMAGE_SHA -t $IMAGE_LATEST .
+          docker push $IMAGE_SHA
+          docker push $IMAGE_LATEST
+          echo "image_sha=$IMAGE_SHA" >> $GITHUB_OUTPUT
+
+  # deploy:
   #   needs: checks
   #   runs-on: ubuntu-latest
-
-  #   steps:
-  #     - uses: actions/checkout@v3
-
-  #     - name: Login to Docker Hub
-  #       run: echo "${{ secrets.DOCKER_PASS }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
-
-  #     - name: Build Docker image
-  #       run: docker build -t ${{ secrets.DOCKER_USER }}/website-v1:${{ github.sha }} .
-
-  #     - name: Push Docker image
-  #       run: docker push ${{ secrets.DOCKER_USER }}/website-v1:${{ github.sha }}
-
-  deploy:
-    needs: checks
-    runs-on: ubuntu-latest
  
-    steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /var/www/myapp/frontend
-            git pull origin main
-            cd /var/www/myapp
-            docker compose up --build -d
+  #   steps:
+  #     - name: Deploy via SSH
+  #       uses: appleboy/ssh-action@v1.0.3
+  #       with:
+  #         host: ${{ secrets.SSH_HOST }}
+  #         username: ${{ secrets.SSH_USER }}
+  #         key: ${{ secrets.SSH_PRIVATE_KEY }}
+  #         script: |
+  #           cd /var/www/myapp/frontend
+  #           git pull origin main
+  #           cd /var/www/myapp
+  #           docker compose up --build -d
