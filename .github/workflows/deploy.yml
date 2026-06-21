@@ -5,11 +5,11 @@ on:
     branches: [main]
 
 jobs:
-  # checks:
-  #   uses: ./.github/workflows/pr-test.yml
+  checks:
+    uses: ./.github/workflows/pr-test.yml
 
   build:
-    # needs: checks
+    needs: checks
     runs-on: ubuntu-latest
 
     steps:
@@ -29,19 +29,21 @@ jobs:
           docker push $IMAGE_LATEST
           echo "image_sha=$IMAGE_SHA" >> $GITHUB_OUTPUT
 
-  # deploy:
-  #   needs: checks
-  #   runs-on: ubuntu-latest
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
  
-  #   steps:
-  #     - name: Deploy via SSH
-  #       uses: appleboy/ssh-action@v1.0.3
-  #       with:
-  #         host: ${{ secrets.SSH_HOST }}
-  #         username: ${{ secrets.SSH_USER }}
-  #         key: ${{ secrets.SSH_PRIVATE_KEY }}
-  #         script: |
-  #           cd /var/www/myapp/frontend
-  #           git pull origin main
-  #           cd /var/www/myapp
-  #           docker compose up --build -d
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/myapp
+            
+            # Берём имя образа из output предыдущего job'а — не дублируем
+            sed -i "s|DOCKER_IMAGE=.*|DOCKER_IMAGE=${{ needs.build.outputs.image_sha }}|" .env
+
+            docker compose up -d --no-deps frontend
